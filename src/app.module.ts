@@ -5,8 +5,10 @@ import { TelegramModule } from './tSender';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    TelegramModule
+    ConfigModule.forRoot({
+      isGlobal: true,  // Make configuration globally available
+    }),
+    TelegramModule,
   ],
 })
 export class AppModule {}
