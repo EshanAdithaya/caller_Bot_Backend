@@ -1,4 +1,4 @@
-// telegram.dto.ts
+// src/tSender/telegram.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty } from 'class-validator';
 
