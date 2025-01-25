@@ -1,14 +1,15 @@
-// src/app.module.ts
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { TelegramModule } from './tSender';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ServersModule } from './modules/servers/servers.module';
+import { ContactsModule } from './modules/contacts/contacts.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,  // Make configuration globally available
-    }),
-    TelegramModule,
+    MongooseModule.forRoot('mongodb://localhost/alert-system'),
+    ServersModule,
+    ContactsModule,
+    NotificationsModule,
   ],
 })
 export class AppModule {}
