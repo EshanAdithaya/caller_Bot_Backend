@@ -1,4 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
+import { ServersService } from "./servers.service";
+import { Server } from "./entities/server.entity";
+import { CreateServerDto } from "./dto/create-server.dto";
 
 @Controller('servers')
 export class ServersController {

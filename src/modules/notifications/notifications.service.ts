@@ -6,6 +6,9 @@ import { ContactsService } from '../contacts/contacts.service';
 
 @Injectable()
 export class NotificationsService {
+  updateStatus(notificationId: string, callStatus: boolean, smsStatus: boolean) {
+      throw new Error("Method not implemented.");
+  }
   constructor(
     @InjectModel(Notification.name) private notificationModel: Model<Notification>,
     private contactsService: ContactsService
