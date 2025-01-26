@@ -1,19 +1,45 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
-import { Notification } from "./schemas/notification.schema";
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiProperty } from '@nestjs/swagger';
 import { NotificationsService } from "./notifications.service";
+import { Notification } from "./schemas/notification.schema";
 import { ContactsService } from "../contacts/contacts.service";
 
+export class ErrorReportDto {
+  @ApiProperty()
+  serverId: string;
+
+  @ApiProperty()
+  error: string;
+}
+
+export class NotificationStatusDto {
+  @ApiProperty()
+  notificationId: string;
+
+  @ApiProperty()
+  callStatus: boolean;
+
+  @ApiProperty()
+  smsStatus: boolean;
+}
+
+@ApiTags('notifications')
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all notifications' })
+  @ApiResponse({ status: 200, type: Notification, isArray: true })
   async getNotifications(): Promise<Notification[]> {
     return this.notificationsService.getNotifications();
   }
 
   @Post('error')
-  async reportError(@Body() errorReport: { serverId: string, error: string }) {
+  @ApiOperation({ summary: 'Report server error' })
+  @ApiBody({ type: ErrorReportDto })
+  @ApiResponse({ status: 201, description: 'Error reported successfully' })
+  async reportError(@Body() errorReport: ErrorReportDto) {
     return this.notificationsService.processServerError(
       errorReport.serverId,
       errorReport.error
@@ -21,7 +47,7 @@ export class NotificationsController {
   }
 }
 
-// ESP32 Communication endpoint
+@ApiTags('esp32')
 @Controller('esp32')
 export class ESP32Controller {
   constructor(
@@ -30,13 +56,10 @@ export class ESP32Controller {
   ) {}
 
   @Post('notification-status')
-  async updateNotificationStatus(
-    @Body() status: {
-      notificationId: string,
-      callStatus: boolean,
-      smsStatus: boolean
-    }
-  ) {
+  @ApiOperation({ summary: 'Update notification status' })
+  @ApiBody({ type: NotificationStatusDto })
+  @ApiResponse({ status: 200, description: 'Status updated successfully' })
+  async updateNotificationStatus(@Body() status: NotificationStatusDto) {
     return this.notificationsService.updateStatus(
       status.notificationId,
       status.callStatus,
@@ -45,6 +68,8 @@ export class ESP32Controller {
   }
 
   @Get('contacts')
+  @ApiOperation({ summary: 'Get active contacts' })
+  @ApiResponse({ status: 200, description: 'Returns active contacts' })
   async getActiveContacts() {
     return this.contactsService.findActive();
   }
