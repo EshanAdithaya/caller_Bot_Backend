@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Server } from './schemas/server.schema';
+import { Server, ServerDocument } from './schemas/server.schema';
 import { CreateServerDto } from './dto/create-server.dto';
 
 @Injectable()
 export class ServersService {
   constructor(
-    @InjectModel(Server.name) private serverModel: Model<Server>
+    @InjectModel(Server.name) private serverModel: Model<ServerDocument>
   ) {}
 
   async findAll(): Promise<Server[]> {

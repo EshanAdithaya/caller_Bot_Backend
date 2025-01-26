@@ -1,13 +1,17 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export enum Priority {
   HIGH = 'high',
   LOW = 'low'
 }
 
+export type ServerDocument = Server & Document;
+
 @Schema()
-export class Server extends Document {
+export class Server {
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   url: string;
 

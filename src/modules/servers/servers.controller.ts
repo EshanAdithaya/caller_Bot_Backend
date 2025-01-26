@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post } from "@nestjs/common";
 import { ServersService } from "./servers.service";
-import { Server } from "./entities/server.entity";
 import { CreateServerDto } from "./dto/create-server.dto";
+import { Server } from "./schemas/server.schema";
 
 @Controller('servers')
 export class ServersController {
@@ -27,7 +27,7 @@ export class ServersController {
     const servers = await this.serversService.findAll();
     return {
       servers: servers.map(s => ({
-        id: s._id,
+        id: s._id.toString(),
         url: s.url,
         priority: s.priority
       }))
