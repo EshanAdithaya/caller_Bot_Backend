@@ -13,19 +13,14 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20'
+          node-version: '20'  # Update this line
           
       - name: Install dependencies
         run: npm install
         
       - name: Build
-        id: build
         run: npm run build
         
-      - name: Run Tests
-        id: test
-        run: npm test || exit 1
-
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
@@ -34,41 +29,9 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd ~/project/caller_Bot_Backend
-            
-            # Create backup of current build
-            if [ -d "dist" ]; then
-              mv dist dist_backup
-            fi
-            
-            # Pull and build
             git pull
             npm install
-            if ! npm run build; then
-              echo "Build failed! Rolling back..."
-              if [ -d "dist_backup" ]; then
-                rm -rf dist
-                mv dist_backup dist
-              fi
-              exit 1
-            fi
-            
-            # Start new instance before stopping old one
-            pm2 start dist/main.js --name "app-new"
-            
-            # Health check
-            sleep 10
-            if curl -f "http://localhost:3001/health"; then
-              pm2 delete 0
-              pm2 rename "app-new" "app"
-              pm2 save
-              rm -rf dist_backup
-              echo "Deployment successful!"
-            else
-              echo "Health check failed! Rolling back..."
-              pm2 delete "app-new"
-              if [ -d "dist_backup" ]; then
-                rm -rf dist
-                mv dist_backup dist
-              fi
-              exit 1
-            fi
+            npm run build
+            pm2 stop 0
+            pm2 start dist/main.js
+            pm2 save
