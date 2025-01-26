@@ -7,7 +7,8 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/alert-system'),
+    MongooseModule.forRoot('mongodb://localhost/alert-system'),
+    // MongooseModule.forRoot('mongodb://127.0.0.1:27017/alert-system'),
     ServersModule,
     ContactsModule,
     NotificationsModule,
