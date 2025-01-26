@@ -74,16 +74,16 @@ export class AuthService {
       resetToken: token,
       resetTokenExpires: { $gt: Date.now() },
     });
-
+  
     if (!user) {
       throw new UnauthorizedException('Invalid or expired token');
     }
-
+  
     user.password = await bcrypt.hash(newPassword, 10);
-    user.resetToken = undefined;
-    user.resetTokenExpires = undefined;
+    user.resetToken = null;
+    user.resetTokenExpires = null;
     await user.save();
-
+  
     return { message: 'Password updated successfully' };
   }
 

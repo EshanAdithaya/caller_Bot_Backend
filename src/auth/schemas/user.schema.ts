@@ -21,12 +21,12 @@ export class User extends Document {
   phone: string;
 
   @ApiProperty()
-  @Prop()
-  resetToken: string;
+  @Prop({ required: false, type: String, default: null })
+  resetToken: string | null;
 
   @ApiProperty()
-  @Prop()
-  resetTokenExpires: Date;
+  @Prop({ required: false, type: Date, default: null })
+  resetTokenExpires: Date | null;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
